@@ -1,0 +1,11 @@
+MODULE Pixel; (*$MAIN*)
+IMPORT g := CGLIB;
+VAR
+  i: INTEGER;
+BEGIN
+  g.InitGraph;
+  g.Palette(0); g.ClearDevice;
+  FOR i := 0 TO 120 DO
+    g.PutPixel(i, i, i)
+  END
+END Pixel.

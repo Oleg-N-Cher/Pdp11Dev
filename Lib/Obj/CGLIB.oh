@@ -1,0 +1,19 @@
+/* Ofront+ 1.0 -sx3 -21 */
+
+#ifndef CGLIB__oh
+#define CGLIB__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+__EXTERN void ClearDevice (void);
+__EXTERN void InitGraph (void);
+__EXTERN void Palette (SHORTINT n);
+__EXTERN void PutPixel (SHORTINT x, SHORTINT y, SHORTINT color);
+__EXTERN void SetPalette (SHORTINT c0, SHORTINT c1, SHORTINT c2, SHORTINT c3);
+#define CGLIB__init()
+
+
+#endif

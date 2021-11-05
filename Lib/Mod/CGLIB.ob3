@@ -1,0 +1,9 @@
+MODULE [foreign] CGLIB;
+
+PROCEDURE InitGraph;
+PROCEDURE ClearDevice;
+PROCEDURE Palette (n: INTEGER);
+PROCEDURE SetPalette (c0, c1, c2, c3: INTEGER);
+PROCEDURE PutPixel (x, y, color: INTEGER);
+
+END CGLIB.

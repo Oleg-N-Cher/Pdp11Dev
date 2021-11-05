@@ -1,0 +1,8 @@
+Bin/gcc
+ToDo/
+Obj/*.c
+Obj/*.lda
+Obj/*.o
+Obj/*.out
+Obj/*.s
+Obj/*.SAV
