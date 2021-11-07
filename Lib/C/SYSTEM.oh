@@ -79,13 +79,8 @@ extern void SYSTEM_ENUMR();
 #  define __REGMOD(name, enum)	m=1
 #  define __ENDMOD
 #endif
-#ifdef SYSTEM_RegisterMain
-  #define __INIT(argc, argv)	static void *m; SYSTEM_INIT(argc, (long)&argv);
-  #define __REGMAIN(name, enum)	m=SYSTEM_REGMOD(name,enum)
-#else
-  #define __INIT(argc, argv)
-  #define __REGMAIN(name, enum)
-#endif
+#define __INIT(argc, argv)
+#define __REGMAIN(name, enum)
 #define __FINI	asm ("emt	0350")	// emt 350 ; .EXIT - Terminate Program
 #define __IMPORT(name__init)	SYSTEM_INCREF(name__init())
 #ifdef SYSTEM_RegisterCommands
@@ -155,10 +150,11 @@ extern void SYSTEM_ENUMR();
 #define __MASK(x, m)	((x)&~(m))
 #define __COPY(s, d, n)	{char*_a=(void*)s,*_b=(void*)d;long _i=0,_t=n-1;while(_i<_t&&((_b[_i]=_a[_i])!=0)){_i++;};_b[_i]=0;}
 #define __STRCMP SYSTEM_STRCMP
-#define __ASH(x, n)	((n)>=0?__ASHL(x,n):__ASHR(x,-(n)))
-#define __ASHL(x, n)	((long)(x)<<(n))
-#define __ASHR(x, n)	((long)(x)>>(n))
-#define __ASHF(x, n)	SYSTEM_ASH((long)(x), (long)(n))
+#define __ASH(x, n, t)  ((n)>=0?__ASHL(x,n,t):__ASHR(x,-(n),t))
+#define __ASHL(x, n, t) ((t)(x)<<(n))
+#define __ASHR(x, n, t) ((t)(x)>>(n))
+#define __ASHF(x, n, t)  SYSTEM_ASH(x, n)
+#define __ASHFL(x, n, t) SYSTEM_ASHL(x, n)
 #define __DUP(x, l, t)	x=(void*)memcpy(malloc(l*sizeof(t)),x,l*sizeof(t))
 #define __DUPARR(v, t)	v=(void*)memcpy(v##__copy,v,sizeof(t))
 #define __DEL(x)	free(x)

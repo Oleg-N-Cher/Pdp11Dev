@@ -1,0 +1,51 @@
+MODULE Flag; (*$MAIN*)
+IMPORT g := CGLIB, SYSTEM;
+CONST
+  Red = 0; Yellow = 1; White = 2; Green = 3;
+VAR
+  x, y: INTEGER;
+
+PROCEDURE AAEntryPoint*; BEGIN (*@asm("jmp _start");*) END AAEntryPoint;
+
+(* https://lists.inf.ethz.ch/pipermail/oberon/2020/014725.html *)
+PROCEDURE Arc* (x0, y0, r, color: INTEGER);
+  VAR x, y, sx, sy, u: INTEGER;
+BEGIN u := 1 - r; x := r; y := 0; sx := 1; sy := 1;
+  IF x0 < 0 THEN sx := -1 END; x0 := ABS(x0);
+  IF y0 < 0 THEN sy := -1 END; y0 := ABS(y0);
+  WHILE y <= x DO
+    IF (sx > 0) & (sy > 0) THEN
+      g.PutPixel(x0+x, y0+y, color);
+      g.PutPixel(x0+y, y0+x, color);
+    ELSIF (sx < 0) & (sy > 0) THEN
+      g.PutPixel(x0-y, y0+x, color);
+      g.PutPixel(x0-x, y0+y, color);
+    ELSIF (sx < 0) & (sy < 0) THEN
+      g.PutPixel(x0-x, y0-y, color);
+      g.PutPixel(x0-y, y0-x, color);
+    ELSE (*(sx > 0) & (sy < 0)*)
+      g.PutPixel(x0+y, y0-x, color);
+      g.PutPixel(x0+x, y0-y, color);
+    END;
+    IF u < 0 THEN INC(u, 2*y+3) ELSE INC(u, 2*(y-x)+5); DEC(x) END;
+    INC(y);
+  END;
+END Arc;
+
+BEGIN
+  g.InitGraph; g.SetPalette(10, 15, 14, 12); g.ClearDevice;
+  g.SetLineColor(White);
+  FOR y := 0 TO 50 DO
+    g.Line(x, y, x + 319, y);
+  END;
+  g.SetLineColor(Green);
+  FOR y := 51 TO 100 DO
+    g.Line(x, y, x + 319, y);
+  END;
+  g.SetLineColor(Yellow);
+  FOR y := 101 TO 150 DO
+    g.Line(x, y, x + 319, y);
+  END;
+  Arc(100, 100, 160, White);
+  LOOP END
+END Flag.

@@ -2,7 +2,9 @@ MODULE [foreign] CGLIB;
 
 PROCEDURE InitGraph;
 PROCEDURE ClearDevice;
+PROCEDURE Line (x1, y1, x2, y2: INTEGER);
 PROCEDURE Palette (n: INTEGER);
+PROCEDURE SetLineColor (color: INTEGER);
 PROCEDURE SetPalette (c0, c1, c2, c3: INTEGER);
 PROCEDURE PutPixel (x, y, color: INTEGER);
 
