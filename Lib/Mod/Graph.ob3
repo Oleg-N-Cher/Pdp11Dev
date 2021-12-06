@@ -1,0 +1,37 @@
+MODULE [noinit] Graph; IMPORT SYSTEM, CGLIB;
+
+PROCEDURE- includeCGLIB- '#include "CGLIB.oh"';
+
+PROCEDURE- ClearDevice* "ClearDevice";
+PROCEDURE- InitGraph* "InitGraph";
+PROCEDURE- Line* (x1, y1, x2, y2: INTEGER) "Line(x1, y1, x2, y2)";
+PROCEDURE- PutPixel* (x, y, color: INTEGER) "PutPixel(x, y, color)";
+PROCEDURE- SetLineColor* (color: INTEGER) "SetLineColor(color)";
+PROCEDURE- SetPalette* (c0, c1, c2, c3: INTEGER) "SetPalette(c0, c1, c2, c3)";
+
+(* https://lists.inf.ethz.ch/pipermail/oberon/2020/014725.html *)
+PROCEDURE Arc* (x0, y0, r, color: INTEGER);
+  VAR x, y, sx, sy, u: INTEGER;
+BEGIN u := 1 - r; x := r; y := 0; sx := 1; sy := 1;
+  IF x0 < 0 THEN x0 := -x0; sx := -1 END;
+  IF y0 < 0 THEN y0 := -y0; sy := -1 END;
+  WHILE y <= x DO
+    IF (sx > 0) & (sy > 0) THEN
+      PutPixel(x0+x, y0+y, color);
+      PutPixel(x0+y, y0+x, color);
+    ELSIF (sx < 0) & (sy > 0) THEN
+      PutPixel(x0-y, y0+x, color);
+      PutPixel(x0-x, y0+y, color);
+    ELSIF (sx < 0) & (sy < 0) THEN
+      PutPixel(x0-x, y0-y, color);
+      PutPixel(x0-y, y0-x, color);
+    ELSE (*(sx > 0) & (sy < 0)*)
+      PutPixel(x0+y, y0-x, color);
+      PutPixel(x0+x, y0-y, color);
+    END;
+    IF u < 0 THEN INC(u, 2*y+3) ELSE INC(u, 2*(y-x)+5); DEC(x) END;
+    INC(y);
+  END;
+END Arc;
+
+END Graph.

@@ -1,0 +1,22 @@
+MODULE TestAsm; (*$MAIN*)
+IMPORT SYSTEM;
+BEGIN
+(*@
+  asm(" \
+        MOV	$040000, R0  \n\
+      	CLR	R1           \n\
+      	MOV	$0400, R3    \n\
+3$:   	MOV	$040, R4     \n\
+2$:   	MOV	$020, R5     \n\
+1$:	   ADD	R1, R2       \n\
+      	ROR	(R0)         \n\
+      	ADD	$0100, R1    \n\
+      	SOB	R5, 1$       \n\
+      	TST	(R0)+        \n\
+      	SOB	R4, 2$       \n\
+      	SUB	$077600, R1  \n\
+      	SOB	R3, 3$       \n\
+loop:   BR   loop         \n\
+  ");
+*)
+END TestAsm.

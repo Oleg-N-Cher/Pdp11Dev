@@ -9,7 +9,7 @@ void InitGraph (void)
 {
   asm("  .GLOBL  TTYOUT              \n"
       "  BIS     $010000, @$044      \n"  // Disable Ctrl-C
-      "  MOV     $INIT$, R0          \n"
+      "  MOV     $TINITG, R0         \n"
 "TTYOUT: TSTB    @$0177564           \n"
       "  BPL     TTYOUT              \n"
       "  MOVB    (R0)+, @$0177566    \n"
@@ -18,15 +18,21 @@ void InitGraph (void)
 "PAUSE0: NOP                         \n"
       "  SOB     R0, PAUSE0          \n"
       "  RTS     PC                  \n"
+"TINITG: .ASCII <033>\"%!1\"<033>\"[0;0r\"  \n"
+"TGRAFR: .ASCII <033>\"%!0\"                \n"
+"TCOLRS: .ASCII <033>\"LI@@\"<047>\"@@\"<040>\"@@\"<040>  \n"
+"TTEXTR: .ASCII <033>\"%!3\"<014>           \n"
 "INIT$:  .BYTE   033, 0246, 062      \n"  // Screen mode 40x24
-      "  .BYTE   033, 045, 041, 061  \n"  // Text mode 1
+      "  .BYTE   0                   \n"
       "  .BYTE   033, 0133, 060, 073, 060, 0162  \n"
       "  .BYTE   033, 045, 041, 060  \n"  // Graph
+      "  .BYTE   033, 045, 041, 061  \n"  // Text mode 1
+      "  .BYTE   0                   \n"
       "  .BYTE	 033, 0240, 061	     \n"  // Цвет символа
       "  .BYTE	 033, 0241, 060	     \n"  // Цвет знакоместа 0
       "  .BYTE	 033, 0242, 060	     \n"  // Цвет фона 0
       "  .BYTE   014                 \n"
-      "  .BYTE   0                   \n"
+
   );
 } // InitGraph
 
@@ -73,21 +79,23 @@ void PALET (void)
 
 void Palette (int n)
 {
-  asm("  MOV     $0146000, R0      ; #CC00  \n"
-      "  MOV     $0167252, R1      ; #EEAA  \n"
-      "  BICB    $0177774, 2(SP)            \n"
-      "  BEQ     PALET$                     \n"
-      "  MOV     $0135631, R0      ; #BB99  \n"
-      "  MOV     $0177735, R1      ; #FFDD  \n"
-      "  DEC     2(SP)                      \n"
-      "  BEQ     PALET$                     \n"
-      "  MOV     $042000, R0       ; #4400  \n"
-      "  MOV     $021146, R1       ; #2266  \n"
-      "  DEC     2(SP)                      \n"
-      "  BEQ     PALET$                     \n"
-      "  MOV     $031421, R0       ; #3311  \n"
-      "  MOV     $073525, R1       ; #7755  \n"
-"PALET$:                                    \n"
+  asm("\
+        MOV     $0146000, R0      ; #CC00  \n\
+        MOV     $0167252, R1      ; #EEAA  \n\
+        BICB    $0177774, %0               \n\
+        BEQ     PALET$                     \n\
+        MOV     $0135631, R0      ; #BB99  \n\
+        MOV     $0177735, R1      ; #FFDD  \n\
+        DEC     %0                         \n\
+        BEQ     PALET$                     \n\
+        MOV     $042000, R0       ; #4400  \n\
+        MOV     $021146, R1       ; #2266  \n\
+        DEC     %0                         \n\
+        BEQ     PALET$                     \n\
+        MOV     $031421, R0       ; #3311  \n\
+        MOV     $073525, R1       ; #7755  \n\
+PALET$:                                    \n"
+        ::"g"(n):"r0","r1"
   );
   PALET();
 } // Palette
@@ -96,24 +104,24 @@ void Palette (int n)
 
 void SetPalette (int c0, int c1, int c2, int c3)
 {
-  asm("  BICB    $0177760, 8(SP)  \n"
-      "  BICB    $0177760, 6(SP)  \n"
-      "  MOVB    6(SP), R0        \n"
-      "  ASH     $4, R0           \n"
-      "  ADD     6(SP), R0        \n"
-      "  ASH     $4, R0           \n"
-      "  ADD     8(SP), R0        \n"
-      "  ASH     $4, R0           \n"
-      "  ADD     8(SP), R0        \n"
+  asm("  BICB    $0177760, 2(SP)  \n"
       "  BICB    $0177760, 4(SP)  \n"
-      "  BICB    $0177760, 2(SP)  \n"
-      "  MOVB    2(SP), R1        \n"
+      "  MOVB    4(SP), R0        \n"
+      "  ASH     $4, R0           \n"
+      "  ADD     4(SP), R0        \n"
+      "  ASH     $4, R0           \n"
+      "  ADD     2(SP), R0        \n"
+      "  ASH     $4, R0           \n"
+      "  ADD     2(SP), R0        \n"
+      "  BICB    $0177760, 6(SP)  \n"
+      "  BICB    $0177760, 8(SP)  \n"
+      "  MOVB    8(SP), R1        \n"
       "  ASH     $4, R1           \n"
-      "  ADD     2(SP), R1        \n"
+      "  ADD     8(SP), R1        \n"
       "  ASH     $4, R1           \n"
-      "  ADD     4(SP), R1        \n"
+      "  ADD     6(SP), R1        \n"
       "  ASH     $4, R1           \n"
-      "  ADD     4(SP), R1        \n"
+      "  ADD     6(SP), R1        \n"
   );
   PALET();
 } // SetPalette

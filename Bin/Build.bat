@@ -1,39 +1,81 @@
 @ECHO OFF
-:: http://ancientbits.blogspot.com/2012/07/programming-barebones-pdp11.html
-
-SET CodeAdr=01000
-SET Options=-Wno-write-strings -fverbose-asm -quiet -O2 -Os -fomit-frame-pointer
-SET Include=-I ..\Lib\C -I ..\Lib\Obj -I ..\Lib
-SET Libraries=%Libraries% -L ..\Lib ..\Lib\CGLIB.lib
-
-SET PATH=..\Bin\gcc\bin
-SET CC=..\Bin\gcc\libexec\gcc\pdp11-aout\10.0.1\cc1.exe
+SET PdpDev=%XDev%\Pdp11Dev
+IF "%XDev%"=="" SET PdpDev=..
+SET PATH=%PdpDev%\Bin\gcc\bin
+SET CC=%PdpDev%\Bin\gcc\libexec\gcc\pdp11-aout\11.2.1\cc1.exe
 SET AS=pdp11-aout-as.exe
 
-%CC% %Options% %Include% %1.c
-IF errorlevel 1 PAUSE
-%AS% %1.s -o %1.o
-IF errorlevel 1 PAUSE
-::pdp11-aout-ld --entry %CodeAdr% -T ldaout.cmd %1.o -o %1.out
-pdp11-aout-ld --entry %CodeAdr% -T ldaout.cmd %1.o -o %1.out %Libraries%
-IF errorlevel 1 PAUSE
-bin2load -a -f %1.out -o %1.lda -b %CodeAdr%
-IF errorlevel 1 PAUSE
-IF EXIST %1.sav DEL /F %1.sav
-lda2sav.exe -o %1.sav %1.lda
-IF errorlevel 1 PAUSE
+IF "%MainMod%"=="" SET MainMod=%1
+IF "%MainMod%"=="%1" GOTO Build
 
-IF NOT EXIST %1.sav EXIT
+:Compile
+
+SET SaveOptions=%Options%
+SET SaveInclude=%Include%
+CALL %PdpDev%\Bin\Compile.bat %1
+SET Options=%SaveOptions%
+SET Include=%SaveInclude%
+
+:Build
+
+IF "%Clean%"=="" SET Clean=TRUE
+IF "%Start%"=="" SET Start=TRUE
+IF "%Pause%"=="" SET Pause=FALSE
+IF "%Target%"=="UKNC" GOTO UKNC
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::                                             BK                                             ::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+SET Emul=d:\WIN32APP\Emulz\GID-BK\BK.exe /B
+SET Options=-mbm1 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Include=-I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
+SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\Basic.lib %PdpDev%\Lib\Laser2.lib
+
+%CC% %Options% %Include% %MainMod%.c
+IF errorlevel 1 PAUSE
+%AS% %MainMod%.s -o %MainMod%.o
+IF errorlevel 1 PAUSE
+pdp11-aout-ld.exe -T %PdpDev%\Bin\pdp11-bin.ld %PdpDev%\Lib\crt0.o %MainMod%.o %Modules% %Libraries% -o %MainMod%.out
+::pdp11-aout-ld.exe --entry 512 %PdpDev%\Lib\crt0.o %MainMod%.o %Modules% %Libraries% -o %MainMod%.bin
+IF errorlevel 1 PAUSE
+::pdp11-aout-objcopy.exe --only-section .text --output-target binary %MainMod%.out ..\%MainMod%.bin
+pdp11-aout-objcopy.exe --output-target binary %MainMod%.out ..\%MainMod%.bin
+IF errorlevel 1 PAUSE
+%PdpDev%\Bin\make-bk.exe ..\%MainMod% 512
+IF errorlevel 1 PAUSE
+IF "%Clean%"=="TRUE" DEL *.out *.s
+IF "%Start%"=="TRUE" START %Emul% ..\%MainMod%.bin
+EXIT
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:                                            UKNC                                              :
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: http://ancientbits.blogspot.com/2012/07/programming-barebones-pdp11.html
+
+SET Emul=d:\WIN32APP\Emulz\UKNCbtl\UKNCBTL.exe /autostart /boot
+SET CodeAdr=01000
+SET Options=-mbm2 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Include=-I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
+SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\CGLIB.lib %PdpDev%\Lib\Graph.lib
+
+%CC% %Options% %Include% %MainMod%.c
+IF errorlevel 1 PAUSE
+%AS% %MainMod%.s -o %MainMod%.o
+IF errorlevel 1 PAUSE
+pdp11-aout-ld.exe %PdpDev%\Lib\crt0rt.o -T pdp11-aout.ld %MainMod%.o -o %MainMod%.out %Libraries%
+IF errorlevel 1 PAUSE
+bin2load.exe -a -f %MainMod%.out -o %MainMod%.lda -b %CodeAdr%
+IF errorlevel 1 PAUSE
+IF EXIST %MainMod%.sav DEL /F %MainMod%.sav
+lda2sav.exe -o %MainMod%.sav %MainMod%.lda
+IF errorlevel 1 PAUSE
+IF NOT EXIST %MainMod%.sav EXIT
 IF EXIST DEMUK.SAV DEL /F DEMUK.SAV
-MOVE /Y %1.sav DEMUK.SAV >NUL
-..\Bin\rt11dsk.exe d ..\UKNC.dsk DEMUK.SAV
+MOVE /Y %MainMod%.sav DEMUK.SAV >NUL
+%PdpDev%\Bin\rt11dsk.exe d ..\UKNC.dsk DEMUK.SAV
 IF errorlevel 1 PAUSE
-..\Bin\rt11dsk.exe a ..\UKNC.dsk DEMUK.SAV
+%PdpDev%\Bin\rt11dsk.exe a ..\UKNC.dsk DEMUK.SAV
 IF errorlevel 1 PAUSE
-
-::SET CURPATH=%CD%
-::CD d:\WIN32APP\Emulz\bkbtl-335
-::BKBTL.exe %CURPATH%\%1.bin
-IF errorlevel 1 PAUSE
-
-START d:\WIN32APP\Emulz\UKNCbtl\UKNCBTL.exe /autostart /boot
+IF "%Start%"=="TRUE" START %Emul%

@@ -1,0 +1,34 @@
+MODULE [noinit] Basic; IMPORT SYSTEM;
+
+TYPE
+  TextCoords* = INTEGER;
+  Adr = POINTER TO ARRAY [untagged] OF CHAR;
+
+VAR
+  color-: ARRAY 2 OF INT8; (* paper, ink *)
+  fontadr-: Adr;
+  scradr*: ADRINT;
+
+PROCEDURE- Init*;
+PROCEDURE- Quit*;
+PROCEDURE- AT* (x, y: TextCoords);
+PROCEDURE- CLS*;
+PROCEDURE- COLOR* (color: INT16)
+  "Basic_color[1] = (char)color; Basic_color[0] = color >> 8";
+PROCEDURE- FONT* (adr: Adr) "Basic_fontadr = adr - 0*10";
+PROCEDURE- INK* (color: INT8) "Basic_color[1] = color";
+PROCEDURE- INKEY* (): CHAR;
+PROCEDURE- PALETTE* (n: INTEGER);
+PROCEDURE- PAPER* (color: INT8) "Basic_color[0] = color";
+PROCEDURE- PRCHAR* (ch: CHAR);
+PROCEDURE- PRINT* (n: INTEGER);
+PROCEDURE- PRSTR* (str: POINTER TO ARRAY [untagged] OF CHAR);
+PROCEDURE- PSET (x, y: INTEGER);
+PROCEDURE- PUT* (spradr: Adr);
+PROCEDURE- RANDOMIZE*;
+PROCEDURE- RNDN- (): INT8;
+PROCEDURE- RND* (min, max: INTEGER): INT8 "Basic_RNDN()%(max-min+1) + min";
+PROCEDURE- LINE (x, y: INTEGER);
+PROCEDURE- SGN* (x: INT8): INT8;
+
+END Basic.

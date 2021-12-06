@@ -1,0 +1,38 @@
+/* Ofront+ 1.0 -sx3 -21 */
+
+#ifndef Basic__oh
+#define Basic__oh
+
+#include "SYSTEM.oh"
+
+typedef
+  CHAR *Basic_Adr;
+
+
+import BYTE Basic_color[2];
+import Basic_Adr Basic_fontadr;
+import SHORTINT Basic_scradr;
+
+
+#define Basic__init()
+
+import void Basic_AT (SHORTINT x, SHORTINT y);
+import void Basic_CLS (void);
+#define Basic_COLOR(color)  Basic_color[1] = (char)color; Basic_color[0] = color >> 8
+#define Basic_FONT(adr)  Basic_fontadr = adr - 0*10
+#define Basic_INK(color)  Basic_color[1] = color
+import CHAR Basic_INKEY (void);
+import void Basic_Init (void);
+import void Basic_PALETTE (SHORTINT n);
+#define Basic_PAPER(color)  Basic_color[0] = color
+import void Basic_PRCHAR (CHAR ch);
+import void Basic_PRINT (SHORTINT n);
+import void Basic_PRSTR (CHAR *str);
+import void Basic_PUT (Basic_Adr spradr);
+import void Basic_Quit (void);
+import void Basic_RANDOMIZE (void);
+#define Basic_RND(min, max)  Basic_RNDN()%(max-min+1) + min
+import BYTE Basic_RNDN (void);
+import BYTE Basic_SGN (BYTE x);
+
+#endif

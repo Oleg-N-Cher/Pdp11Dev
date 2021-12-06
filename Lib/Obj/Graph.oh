@@ -1,0 +1,22 @@
+/* Ofront+ 1.0 -sx3 -21 */
+
+#ifndef Graph__oh
+#define Graph__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import void Graph_Arc (SHORTINT x0, SHORTINT y0, SHORTINT r, SHORTINT color);
+#define Graph__init()
+
+#define Graph_ClearDevice()  ClearDevice
+#define Graph_InitGraph()  InitGraph
+#define Graph_Line(x1, y1, x2, y2)  Line(x1, y1, x2, y2)
+#define Graph_PutPixel(x, y, color)  (x, y, color)
+#define Graph_SetLineColor(color)  SetLineColor(color)
+#define Graph_SetPalette(c0, c1, c2, c3)  SetPalette(c0, c1, c2, c3)
+#include "CGLIB.oh"
+
+#endif

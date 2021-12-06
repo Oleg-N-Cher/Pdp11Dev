@@ -33,11 +33,12 @@ typedef unsigned int LONGCHAR;
 typedef signed char BYTE;
 typedef signed int SHORTINT;
 typedef signed long INTEGER;
+typedef signed long long LONGINT;
 typedef float REAL;
 typedef float LONGREAL;
-typedef unsigned char SET;
+typedef unsigned int SET;
 typedef void *SYSTEM_PTR;
-typedef unsigned int SYSTEM_ADDRESS;
+typedef int SYSTEM_ADRINT;
 
 /* runtime system routines */
 extern long SYSTEM_DIV();
@@ -81,7 +82,7 @@ extern void SYSTEM_ENUMR();
 #endif
 #define __INIT(argc, argv)
 #define __REGMAIN(name, enum)
-#define __FINI	asm ("emt	0350")	// emt 350 ; .EXIT - Terminate Program
+#define __FINI
 #define __IMPORT(name__init)	SYSTEM_INCREF(name__init())
 #ifdef SYSTEM_RegisterCommands
   #define __REGCMD(name, cmd)	SYSTEM_REGCMD(m, name, cmd)
@@ -106,6 +107,7 @@ extern void SYSTEM_ENUMR();
 #define __MOVE(s, d, n)	memcpy((char*)(d),(char*)(s),n)
 
 /* std procs and operator mappings */
+#define __CONSTARR const
 #define __SHORT(x, y)	((int)((unsigned long)(x)+(y)<(y)+(y)?(x):(__HALT(-8),0)))
 #define __SHORTF(x, y)	((int)(__RF((x)+(y),(y)+(y))-(y)))
 #define __CHR(x)	((CHAR)__R(x, 256))
@@ -161,6 +163,18 @@ extern void SYSTEM_ENUMR();
 #define __IS(tag, typ, level)	(*(tag-(__BASEOFF-level))==(long)typ##__typ)
 #define __TYPEOF(p)	(*(((long**)(p))-1))
 #define __ISP(p, typ, level)	__IS(__TYPEOF(p),typ,level)
+#define __MIN(x, y)	    ((x)<(y)?(x):(y))
+#define __MINFS(x, y)	  SYSTEM_MINS(x, y)
+#define __MINF(x, y)	  SYSTEM_MIN(x, y)
+#define __MINFL(x, y)	  SYSTEM_MINL(x, y)
+#define __MINFF 	      SYSTEM_MINF(x, y)
+#define __MINFD 	      SYSTEM_MINF(x, y)
+#define __MAX(x, y)	    ((x)>(y)?(x):(y))
+#define __MAXFS(x, y)	  SYSTEM_MAXS(x, y)
+#define __MAXF(x, y)	  SYSTEM_MAX(x, y)
+#define __MAXFL(x, y)	  SYSTEM_MAXL(x, y)
+#define __MAXFF 	      SYSTEM_MAXF(x, y)
+#define __MAXFD 	      SYSTEM_MAXF(x, y)
 
 /* runtime checks */
 #ifndef SYSTEM_NoCheck_X
@@ -235,36 +249,11 @@ extern void SYSTEM_ENUMR();
   #define __SEND(typ, procname, num, funtyp, parlist) procname parlist
 #endif
 
-/* runtime system variables */
-//extern CHAR *SYSTEM_str_par;
-//extern void (*SYSTEM_Halt)();
-//extern LONGINT SYSTEM_halt;
-//extern LONGINT SYSTEM_assert;
-//extern SYSTEM_PTR SYSTEM_modules;
-//extern LONGINT SYSTEM_heapsize;
-//extern LONGINT SYSTEM_allocated;
-//extern LONGINT SYSTEM_lock;
-//extern SHORTINT SYSTEM_gclock;
-//extern BOOLEAN SYSTEM_interrupted;
 
-/* ANSI prototypes; not used so far
-int SYSTEM_STRCMP(CHAR *x, CHAR *y);
-void SYSTEM_INIT(int argc, long argvadr);
-void SYSTEM_FINI(void);
-long SYSTEM_XCHK(long i, long ub);
-long SYSTEM_RCHK(long i, long ub);
-long SYSTEM_ASH(long i, long n);
-long SYSTEM_ABS(long i);
-float SYSTEM_ABSD(float i);
-void SYSTEM_INHERIT(long *t, long *t0);
-void SYSTEM_ENUMP(long *adr, long n, void (*P)(void*));
-void SYSTEM_ENUMR(char *adr, long *typ, long size, long n, void (*P)(void*));
-long SYSTEM_DIV(unsigned long x, unsigned long y);
-long SYSTEM_MOD(unsigned long x, unsigned long y);
-long SYSTEM_ENTIER(float x);
-void SYSTEM_HALT(int n);
-*/
+extern int __mulhi3 (int a, int b);
+extern int __divhi3 (int a, int b);
 
-#define main(argc, argv) start(void)
+
+#define main(argc, argv) main(void)
 
 #endif

@@ -1,0 +1,13 @@
+MODULE [noinit] Laser2; IMPORT SYSTEM;
+
+TYPE
+  SprAdr = POINTER TO ARRAY [untagged] OF CHAR;
+VAR
+  spradr-: SprAdr;
+
+PROCEDURE- SPRT* (adr: SprAdr) "Laser2_spradr = adr";
+PROCEDURE- PTBL* (x, y, spn: INTEGER);
+PROCEDURE- PTBLm* (x, y, spn: INTEGER);
+PROCEDURE- PTBLy* (x, y, spn: INTEGER);
+
+END Laser2.

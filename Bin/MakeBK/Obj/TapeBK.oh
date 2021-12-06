@@ -1,0 +1,30 @@
+/* Ofront+ 1.0 -s3 -48 */
+
+#ifndef TapeBK__oh
+#define TapeBK__oh
+
+#include "SYSTEM.oh"
+
+typedef
+  struct TapeBK_TapeFile {
+    INTEGER _prvt0;
+    char _prvt1[8];
+    BOOLEAN error;
+    INTEGER errcode;
+    char _prvt2[4];
+  } TapeBK_TapeFile;
+
+import void TapeBK_TapeFile_Finalize (TapeBK_TapeFile *tap);
+import void TapeBK_TapeFile_ReCreate (TapeBK_TapeFile *tap, CHAR *tapeName, INTEGER tapeName__len);
+import void TapeBK_TapeFile_SaveCode (TapeBK_TapeFile *tap, CHAR *name, INTEGER name__len, INTEGER startAddr, INTEGER dataLength, CHAR *data, INTEGER data__len);
+#define __TapeBK_TapeFile_Finalize(tap) __SEND(tap__typ, TapeBK_TapeFile_Finalize, 0, void(*)(TapeBK_TapeFile*), (tap))
+#define __TapeBK_TapeFile_ReCreate(tap, tapeName, tapeName__len) __SEND(tap__typ, TapeBK_TapeFile_ReCreate, 1, void(*)(TapeBK_TapeFile*, CHAR*, INTEGER ), (tap, tapeName, tapeName__len))
+#define __TapeBK_TapeFile_SaveCode(tap, name, name__len, startAddr, dataLength, data, data__len) __SEND(tap__typ, TapeBK_TapeFile_SaveCode, 4, void(*)(TapeBK_TapeFile*, CHAR*, INTEGER , INTEGER, INTEGER, CHAR*, INTEGER ), (tap, name, name__len, startAddr, dataLength, data, data__len))
+
+
+
+
+import void *TapeBK__init (void);
+
+
+#endif

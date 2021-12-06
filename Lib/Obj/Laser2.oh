@@ -1,0 +1,22 @@
+/* Ofront+ 1.0 -sx3 -21 */
+
+#ifndef Laser2__oh
+#define Laser2__oh
+
+#include "SYSTEM.oh"
+
+typedef
+  CHAR *Laser2_SprAdr;
+
+
+import Laser2_SprAdr Laser2_spradr;
+
+
+#define Laser2__init()
+
+import void Laser2_PTBL (SHORTINT x, SHORTINT y, SHORTINT spn);
+import void Laser2_PTBLm (SHORTINT x, SHORTINT y, SHORTINT spn);
+import void Laser2_PTBLy (SHORTINT x, SHORTINT y, SHORTINT spn);
+#define Laser2_SPRT(adr)  Laser2_spradr = adr
+
+#endif
