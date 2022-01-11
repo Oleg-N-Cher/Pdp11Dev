@@ -1,4 +1,4 @@
-/* Ofront+ 1.0 -sx3 -21 */
+/* Ofront+ 1.0 -sx3 -22 */
 
 #ifndef Laser2__oh
 #define Laser2__oh
@@ -14,9 +14,15 @@ import Laser2_SprAdr Laser2_spradr;
 
 #define Laser2__init()
 
+import void Laser2_CLSV (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_PTBL (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLm (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLy (SHORTINT x, SHORTINT y, SHORTINT spn);
 #define Laser2_SPRT(adr)  Laser2_spradr = adr
+import void Laser2_WL1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_WL4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_WL8V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_WR1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_WR4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 
 #endif

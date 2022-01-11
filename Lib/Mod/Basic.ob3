@@ -1,7 +1,7 @@
 MODULE [noinit] Basic; IMPORT SYSTEM;
 
 TYPE
-  TextCoords* = INTEGER;
+  TextCoords* = INT8;
   Adr = POINTER TO ARRAY [untagged] OF CHAR;
 
 VAR
@@ -11,18 +11,20 @@ VAR
 
 PROCEDURE- Init*;
 PROCEDURE- Quit*;
-PROCEDURE- AT* (x, y: TextCoords);
+PROCEDURE- AT* (x, y: INT16);
 PROCEDURE- CLS*;
 PROCEDURE- COLOR* (color: INT16)
   "Basic_color[1] = (char)color; Basic_color[0] = color >> 8";
-PROCEDURE- FONT* (adr: Adr) "Basic_fontadr = adr - 0*10";
+PROCEDURE- FONT* (adr: Adr) "Basic_fontadr = adr - (32-10)*10";
 PROCEDURE- INK* (color: INT8) "Basic_color[1] = color";
 PROCEDURE- INKEY* (): CHAR;
 PROCEDURE- PALETTE* (n: INTEGER);
 PROCEDURE- PAPER* (color: INT8) "Basic_color[0] = color";
+PROCEDURE- PAUSE* (ticks: INT16) "  ";
 PROCEDURE- PRCHAR* (ch: CHAR);
 PROCEDURE- PRINT* (n: INTEGER);
 PROCEDURE- PRSTR* (str: POINTER TO ARRAY [untagged] OF CHAR);
+PROCEDURE- PRWORD* (n: INTEGER);
 PROCEDURE- PSET (x, y: INTEGER);
 PROCEDURE- PUT* (spradr: Adr);
 PROCEDURE- RANDOMIZE*;

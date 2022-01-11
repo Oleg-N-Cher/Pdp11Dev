@@ -29,8 +29,8 @@ IF "%Target%"=="UKNC" GOTO UKNC
 
 SET Emul=d:\WIN32APP\Emulz\GID-BK\BK.exe /B
 SET Options=-mbm1 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
-SET Include=-I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
-SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\Basic.lib %PdpDev%\Lib\Laser2.lib
+SET Include=%Include% -I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
+SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\Basic.lib %PdpDev%\Lib\Laser2.lib %PdpDev%\Lib\Control.lib
 
 %CC% %Options% %Include% %MainMod%.c
 IF errorlevel 1 PAUSE

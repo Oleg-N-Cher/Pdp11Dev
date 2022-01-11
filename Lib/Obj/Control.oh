@@ -1,0 +1,15 @@
+/* Ofront+ 1.0 -sx3 -22 */
+
+#ifndef Control__oh
+#define Control__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import CHAR Control_Get (void);
+#define Control__init()
+
+
+#endif

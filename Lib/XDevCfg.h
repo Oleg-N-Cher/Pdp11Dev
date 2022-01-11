@@ -36,6 +36,7 @@
 #define SYSTEM_DIV_as_in_C
 #define SYSTEM_MOD_as_in_C
 #define SYSTEM_NoASSERT
+#define SYSTEM_NoHALT
 
 /* Runtime checks */
 #define SYSTEM_NoCheck_X

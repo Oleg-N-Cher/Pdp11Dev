@@ -5,9 +5,18 @@ TYPE
 VAR
   spradr-: SprAdr;
 
-PROCEDURE- SPRT* (adr: SprAdr) "Laser2_spradr = adr";
-PROCEDURE- PTBL* (x, y, spn: INTEGER);
-PROCEDURE- PTBLm* (x, y, spn: INTEGER);
-PROCEDURE- PTBLy* (x, y, spn: INTEGER);
+PROCEDURE- SPRT  * (adr: SprAdr) "Laser2_spradr = adr";
+PROCEDURE- PTBL  * (x, y, spn: INTEGER);
+PROCEDURE- PTBLm * (x, y, spn: INTEGER);
+PROCEDURE- PTBLy * (x, y, spn: INTEGER);
+
+(** Screen windows processing (coordinates CANNOT be outside the screen): *)
+
+PROCEDURE- CLSV * (col, row, len, hgt: INTEGER);
+PROCEDURE- WL1V * (col, row, len, hgt: INTEGER);
+PROCEDURE- WL4V * (col, row, len, hgt: INTEGER);
+PROCEDURE- WL8V * (col, row, len, hgt: INTEGER);
+PROCEDURE- WR1V * (col, row, len, hgt: INTEGER);
+PROCEDURE- WR4V * (col, row, len, hgt: INTEGER);
 
 END Laser2.

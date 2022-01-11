@@ -134,7 +134,11 @@ extern void SYSTEM_ENUMR();
 #  define __NEWARR	SYSTEM_NEWARR
 #endif
 
-#define __HALT(x)	SYSTEM_HALT(x)
+#ifndef SYSTEM_NoHALT
+#  define __HALT(x)	SYSTEM_HALT(x)
+#else
+#  define __HALT(x)
+#endif
 #ifndef SYSTEM_NoASSERT
 #  define __ASSERT(cond, x)	if (!(cond)) {SYSTEM_assert = x; SYSTEM_HALT(-1);}
 #else

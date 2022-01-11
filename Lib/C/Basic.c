@@ -1,30 +1,28 @@
 signed char Basic_x, Basic_y;
 signed char Basic_color [2];
 void *Basic_scradr, *Basic_seed, *Basic_fontadr;
+signed char Basic_bk10;
 
 /*------------------------------- Cut here --------------------------------*/
 void Basic_Init (void)
 {
   asm("\
-        CMPB  @$0177717, $0200       \n\
-        BEQ   10$                    \n\
-        MTPS  $0340                  \n\
-        MOV   $016000, @$0177716     \n\
-10$:    MOVB  $0100, @$0177660       \n\
-        TSTB  @$0177662  // Get key  \n\
-        MOV   $041000, _Basic_scradr \n\
-        MOV   $0100000, _Basic_seed"
+        MOV   @$4, -(SP) // Vec4>(SP) \n\
+        MOV   $BK_10$, @$4 // SetVec4 \n\
+        MOV   $042000, @$0177662      \n\
+BK_11$: MTPS  $0340                   \n\
+        MOV   $016000, @$0177716      \n\
+        CLRB  _Basic_bk10             \n\
+        BR    0$                      \n\
+BK_10$: TST   (SP)+ // Ignore ret adr \n\
+        MTPS  (SP)+ // Restore prior  \n\
+        MOVB  $1, _Basic_bk10         \n\
+0$:     MOV   (SP)+, @$4 // Restore 4 \n\
+        MOVB  $0100, @$0177660        \n\
+        MOV   $041000, _Basic_scradr  \n\
+        MOV   $0100000, _Basic_seed   \n"
   );
 } // Basic_Init
-/*
-        MOV  $0152112, @$030    \n\
-        EMT  0                  \n\
-        MOV  $5, R0             \n\
-        EMT  012  // Scr 40000  \n\
-        CLR  R0                 \n\
-        EMT  056  // Buf 0 r/w  \n\
-        MOV  $0140000, @$4      \n\
-*/
 
 /*------------------------------- Cut here --------------------------------*/
 void Basic_Quit (void)
@@ -57,21 +55,21 @@ void Basic_AT (int x, int y)
 void Basic_CLS (void)  // Clear screen
 {
   asm("\
-        MOV  $040000, R0        \n\
-0$:     CLRB 037777(R0)         \n\
-        SOB  R0, 0$             \n\
-        MOV  $01330, @$0177664  \n"  // Set default scroll position
+        MOV   $040000, R0        \n\
+0$:     CLRB  037777(R0)         \n\
+        SOB   R0, 0$             \n\
+        MOV   $01330, @$0177664  \n"  // Set default scroll position
   );
 } // Basic_CLS
 
 /*------------------------------- Cut here --------------------------------*/
 signed char Basic_INKEY (void) {
   asm("\
-        CLR  R0                 \n\
-        TSTB @$0177660          \n\
-        BPL  NOKEY$             \n\
-        MOVB @$0177662, R0      \n\
- NOKEY$:                        \n"
+        CLR   R0                 \n\
+        TSTB  @$0177660          \n\
+        BPL   NOKEY$             \n\
+        MOVB  @$0177662, R0      \n\
+ NOKEY$:                         \n"
   );
 } // Basic_INKEY
 
@@ -91,14 +89,14 @@ void Basic_LINE (int x, int y)
 void Basic_PALETTE (int n)
 {
   asm("\
-        CMPB @$0177717, $0200   \n\
-        BEQ  BK0010             \n\
-        MOV  %0, R0             \n\
-        BIC  $0177760, R0       \n\
-        SWAB R0                 \n\
-        BIS  $040000, R0        \n\
-        MOV  R0, @$0177662      \n\
-BK0010:"
+        TSTB  _Basic_bk10        \n\
+        BNE   NOPAL$             \n\
+        MOV   %0, R0             \n\
+        BIC   $0177760, R0       \n\
+        SWAB  R0                 \n\
+        BIS   $040000, R0        \n\
+        MOV   R0, @$0177662      \n\
+NOPAL$:"
       ::"g"(n)
   );
 } // Basic_PALETTE
@@ -140,26 +138,13 @@ FRMPIX: ASL   R5                    \n\
 } // Basic_PRCHAR
 
 /*------------------------------- Cut here --------------------------------*/
+void Basic_PRCHAR (signed char ch);
+void Basic_PRWORD (int n);
+
 void Basic_PRINT (int n)
 {
-  asm("\
-        MOV   %0, R4                \n\
-        MOV   $DIGIT$, R2           \n\
-        MOV   $5, R3                \n\
-1$:     MOV   $057, R0              \n\
-2$:     INC   R0                    \n\
-        SUB   @R2, R4               \n\
-        BHIS  2$                    \n\
-        MOVB  R0, -(SP)             \n\
-        JSR   PC, _Basic_PRCHAR     \n\
-        ADD   $2, SP                \n\
-        ADD   (R2)+, R4             \n\
-        SOB   R3, 1$                \n\
-        BR    3$                    \n\
-DIGIT$: .WORD 10000,1000,100,10,1   \n\
-3$:                                 \n"
-      ::"g"(n):"r2","r3","r4"
-  );
+  if (n < 0) { Basic_PRCHAR('-'); n = -n; }
+  Basic_PRWORD(n);
 } // Basic_PRINT
 
 /*------------------------------- Cut here --------------------------------*/
@@ -180,6 +165,37 @@ NULLCH:"
       ::"g"(str)
   );
 } // Basic_PRSTR
+
+/*------------------------------- Cut here --------------------------------*/
+void Basic_PRWORD (int n)
+{
+  asm("\
+        MOV   %0, R2                \n\
+        MOV   $TEN, R3 // table adr \n\
+1$:     CMP   (R3)+, R2 // skip 0's \n\
+        BHI   1$                    \n\
+        MOV   -(R3), R0             \n\
+        BEQ   4$ // if less than 10 \n\
+2$:     MOV   $47, R1   // '0' - 1  \n\
+3$:     INC   R1   // count digits  \n\
+        SUB   R0, R2                \n\
+        BHIS  3$  // higher or same \n\
+        MOVB  R1, -(SP)             \n\
+        JSR   PC, _Basic_PRCHAR     \n\
+        ADD   $2, SP                \n\
+        ADD   (R3)+, R2             \n\
+        MOV   (R3), R0              \n\
+        BNE   2$                    \n\
+4$:     ADD   $48, R2  // ASCII '0' \n\
+        MOVB  R2, -(SP)             \n\
+        JSR   PC, _Basic_PRCHAR     \n\
+        ADD   $2, SP                \n\
+        BR    5$                    \n\
+TEN:    .WORD 10000,1000,100,10, 0  \n\
+5$:                                 \n"
+      ::"g"(n):"r2","r3"
+  );
+} // Basic_PRWORD
 
 /*------------------------------- Cut here --------------------------------*/
 void Basic_PSET (int x, int y)
