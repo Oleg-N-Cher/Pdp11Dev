@@ -22,6 +22,7 @@ IF "%Clean%"=="" SET Clean=TRUE
 IF "%Start%"=="" SET Start=TRUE
 IF "%Pause%"=="" SET Pause=FALSE
 IF "%Target%"=="UKNC" GOTO UKNC
+IF "%Target%"=="MK90" GOTO MK90
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::                                             BK                                             ::
@@ -79,3 +80,28 @@ IF errorlevel 1 PAUSE
 %PdpDev%\Bin\rt11dsk.exe a ..\UKNC.dsk DEMUK.SAV
 IF errorlevel 1 PAUSE
 IF "%Start%"=="TRUE" START %Emul%
+EXIT
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:                                             MK90                                            ::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+SET EmulPath=d:\WIN32APP\Emulz\MK90\
+SET Options=-mbm2 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Include=%Include% -I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
+SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\MK90.lib
+
+%CC% %Options% %Include% %MainMod%.c
+IF errorlevel 1 PAUSE
+%AS% %MainMod%.s -o %MainMod%.o
+IF errorlevel 1 PAUSE
+pdp11-aout-ld.exe -T %PdpDev%\Bin\pdp11-bin0.ld --entry 0 %PdpDev%\Lib\crt0mk90.o %MainMod%.o %Modules% %Libraries% -o %MainMod%.out
+IF errorlevel 1 PAUSE
+pdp11-aout-objcopy.exe --output-target binary %MainMod%.out ..\%MainMod%.bin
+IF errorlevel 1 PAUSE
+
+IF "%Clean%"=="TRUE" DEL *.out *.s
+IF "%Start%"\=="TRUE" EXIT
+COPY /b ..\%MainMod%.bin %EmulPath%\smp0.bin
+CD %EmulPath%
+START mk90.exe

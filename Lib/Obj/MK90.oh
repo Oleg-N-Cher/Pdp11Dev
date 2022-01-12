@@ -1,0 +1,16 @@
+/* Ofront+ 1.0 -sx3 -22 */
+
+#ifndef MK90__oh
+#define MK90__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import void MK90_CLS (void);
+import void MK90_PIXEL (void);
+import void MK90_PSET (SHORTINT x, SHORTINT y);
+
+
+#endif
