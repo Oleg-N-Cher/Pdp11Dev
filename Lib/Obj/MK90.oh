@@ -9,6 +9,7 @@
 
 
 import void MK90_CLS (void);
+import void MK90_LINE (SHORTINT x0, SHORTINT y0, SHORTINT x1, SHORTINT y1);
 import void MK90_PIXEL (void);
 import void MK90_PSET (SHORTINT x, SHORTINT y);
 
