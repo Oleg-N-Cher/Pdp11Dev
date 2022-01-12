@@ -16,7 +16,8 @@ void MK90_CLS (void)
 {
 
   asm("\
-    MOV  $0x200, R0   \n\
+    MOV  $0x200, @$0xE800 \n\
+    MOV  $0x200, R0  \n\
     MOV  $0x1E0, R1   \n\
 1$: CLR  (R0)+        \n\
     SOB  R1, 1$       \n"
@@ -55,7 +56,7 @@ void MK90_PSET (SHORTINT x, SHORTINT y)
     MOV  %0, R0           \n\
     MOV  %1, R1           \n\
     JSR  PC, _MK90_PIXEL  \n\
-    BIS  R2, 0x200(R1)    "
+    BIS  R2, 0x200(R1)    \n"
   ::"g"(x), "g"(y):"r2"
   );
 }
