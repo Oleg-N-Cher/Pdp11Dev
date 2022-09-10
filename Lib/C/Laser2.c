@@ -159,7 +159,7 @@ void Laser2_WL1V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
-        ASL   R2          // 2*x    \n\
+        ASL   R2          // 2*len  \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
         ADD   R2, R0    // scr+len  \n\
@@ -169,7 +169,7 @@ OUTLN3: MOV   R0, R1      // scr    \n\
 OUTBY3: RORB  -(R1)                 \n\
         SOB   R4, OUTBY3            \n\
         BCC   NULPIX                \n\
-	      BIS   $0100000, -1(R0)      \n\
+        BIS   $0100000, -1(R0)      \n\
 NULPIX: INC   PC  // repeat twice   \n\
         BR    OUTLN3                \n\
         ADD   $0100, R0             \n\
@@ -185,14 +185,15 @@ void Laser2_WL4V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
-        ASL   R2         // 2*x     \n\
+        ASL   R2                    \n\
+        DEC   R2        // 2*len-1  \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
 OUTLN4: MOV   R0, R1                \n\
         MOV   R2, R4                \n\
         MOVB  @R1, R5               \n\
-OUTWR4: MOVB  1(R1), (R1)+          \n\
-        SOB   R4, OUTWR4            \n\
+OUTBT4: MOVB  1(R1), (R1)+          \n\
+        SOB   R4, OUTBT4            \n\
         MOVB  R5, @R1               \n\
         ADD   $0100, R0             \n\
         SOB   R3, OUTLN4            \n\
@@ -228,7 +229,7 @@ void Laser2_WR1V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
-        ASL   R2          // 2*x    \n\
+        ASL   R2          // 2*len  \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
 OUTLN6: MOV   R0, R1      // scr    \n\
@@ -252,15 +253,16 @@ void Laser2_WR4V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
-        ASL   R2         // 2*x     \n\
+        ASL   R2                    \n\
+        DEC   R2        // 2*len-1  \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
-OUTLN7: MOV   R0, R1                \n\
-        MOV   R2, R4                \n\
-        ADD   R4, R1                \n\
+        ADD   R2, R0    // scr+len  \n\
+OUTLN7: MOV   R0, R1      // scr    \n\
+        MOV   R2, R4      // len    \n\
         MOVB  -1(R1), R5            \n\
-OUTWR7: MOVB  -(R1), -1(R1)         \n\
-        SOB   R4, OUTWR7            \n\
+OUTBT7: MOVB  -(R1), 1(R1)          \n\
+        SOB   R4, OUTBT7            \n\
         MOVB  R5, @R1               \n\
         ADD   $0100, R0             \n\
         SOB   R3, OUTLN7            \n\
