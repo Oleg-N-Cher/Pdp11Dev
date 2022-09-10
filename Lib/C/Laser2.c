@@ -159,20 +159,21 @@ void Laser2_WL1V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
-        ASL   R2         // 2*x     \n\
+        ASL   R2          // 2*x    \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
-OUTLN3: MOV   R0, R1                \n\
-        MOV   R2, R4                \n\
-        MOV   @R1, R5               \n\
-OUTWR3: MOV   @R1, R5               \n\
-        ASL   R5                    \n\
-        ASL   R5                    \n\
-        MOVB  R5, (R1)+             \n\
-        SOB   R4, OUTWR3            \n\
-        MOV   R5, @R1               \n\
+        ADD   R2, R0    // scr+len  \n\
+OUTLN3: MOV   R0, R1      // scr    \n\
+        MOV   R2, R4      // len    \n\
+        CLC                         \n\
+OUTBY3: RORB  -(R1)                 \n\
+        SOB   R4, OUTBY3            \n\
+        BCC   NULPIX                \n\
+	      BIS   $0100000, -1(R0)      \n\
+NULPIX: INC   PC  // repeat twice   \n\
+        BR    OUTLN3                \n\
         ADD   $0100, R0             \n\
-        SOB   R3, OUTLN3            \n\
+        SOB   R3, OUTLN3  // hgt    \n\
         MOV   (SP)+, R5             \n\
         MOV   (SP)+, R4             \n"
       :::"r2", "r3"
@@ -225,6 +226,25 @@ OUTWR5: MOV   2(R1), (R1)+          \n\
 /*------------------------------- Cut here --------------------------------*/
 void Laser2_WR1V (int x, int y, int len, int hgt)
 {
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        ASL   R2          // 2*x    \n\
+        MOV   R4, -(SP)             \n\
+        MOV   R5, -(SP)             \n\
+OUTLN6: MOV   R0, R1      // scr    \n\
+        MOV   R2, R4      // len    \n\
+        CLC                         \n\
+OUTBY6: ROLB  (R1)+                 \n\
+        SOB   R4, OUTBY6            \n\
+        ADC   @R0                   \n\
+        INC   PC  // repeat twice   \n\
+        BR    OUTLN6                \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLN6  // hgt    \n\
+        MOV   (SP)+, R5             \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
 } // Laser2_WR1V
 
 /*------------------------------- Cut here --------------------------------*/

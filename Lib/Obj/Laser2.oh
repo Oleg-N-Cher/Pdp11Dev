@@ -12,7 +12,6 @@ typedef
 import Laser2_SprAdr Laser2_spradr;
 
 
-#define Laser2__init()
 
 import void Laser2_CLSV (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_PTBL (SHORTINT x, SHORTINT y, SHORTINT spn);
