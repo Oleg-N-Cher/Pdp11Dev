@@ -23,12 +23,13 @@ FIND_S: CMPB  (R2)+, R1           \n\
         ADD   R3, R2              \n\
         BR    FIND_S              \n\
 SPRFND: TSTB  (R2)+               \n\
-        MOVB  (R2)+, R3           \n\
-        MOVB  (R2)+, R4           \n\
+        MOVB  (R2)+, R3 // length \n\
+        MOVB  (R2)+, R4 // height \n\
         MOV   R5, -(SP)           \n\
 OUTLIN: MOV   R0, R1              \n\
         MOV   R3, R5              \n\
-OUTWRD: MOV   (R2)+, (R1)+        \n\
+OUTWRD: MOVB  (R2)+, (R1)+        \n\
+        MOVB  (R2)+, (R1)+        \n\
         SOB   R5, OUTWRD          \n\
         ADD   $0100, R0           \n\
         SOB   R4, OUTLIN          \n\
@@ -208,6 +209,7 @@ void Laser2_WL8V (int x, int y, int len, int hgt)
 {
   asm("\
         JSR   PC, __Laser2_XYtoScr  \n\
+        DEC   R2          // len-1  \n\
         MOV   R4, -(SP)             \n\
         MOV   R5, -(SP)             \n\
 OUTLN5: MOV   R0, R1                \n\
