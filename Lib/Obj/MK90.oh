@@ -1,4 +1,4 @@
-/* Ofront+ 1.0 -sx3 -22 */
+/* Ofront+ 1.0 -sxi3 -22 */
 
 #ifndef MK90__oh
 #define MK90__oh
@@ -13,5 +13,9 @@ import void MK90_LINE (SHORTINT x0, SHORTINT y0, SHORTINT x1, SHORTINT y1);
 import void MK90_PIXEL (void);
 import void MK90_PSET (SHORTINT x, SHORTINT y);
 
+#define MK90_PEEK(adr)  (*(char*) (adr))
+#define MK90_PEEKW(adr)  (*(int*) (adr))
+#define MK90_POKE(adr, val)  (*(char*) (adr) = (val))
+#define MK90_POKEW(adr, val)  (*(int*) (adr) = (val))
 
 #endif

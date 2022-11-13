@@ -1,5 +1,10 @@
 MODULE [noinit] MK90; IMPORT SYSTEM;
 
+PROCEDURE- POKE* (adr: INT32; val: INT8) "(*(char*) (adr) = (val))";
+PROCEDURE- POKEW* (adr: INT32; val: INT16) "(*(int*) (adr) = (val))";
+PROCEDURE- PEEK* (adr: INT32): INT8 "(*(char*) (adr))";
+PROCEDURE- PEEKW* (adr: INT32): INT16 "(*(int*) (adr))";
+
 PROCEDURE CLS*; (** Clear screen *)
 BEGIN (*@
   asm("\

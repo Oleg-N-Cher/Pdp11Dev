@@ -14,7 +14,6 @@ import Basic_Adr Basic_fontadr;
 import SHORTINT Basic_scradr;
 
 
-#define Basic__init()
 
 import void Basic_AT (SHORTINT x, SHORTINT y);
 import void Basic_CLS (void);

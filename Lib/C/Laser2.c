@@ -156,6 +156,92 @@ OUTWR2: CLR   (R1)+                 \n\
 } // Laser2_CLSV
 
 /*------------------------------- Cut here --------------------------------*/
+void Laser2_SL1V (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        ASL   R2          // 2*len  \n\
+        MOV   R4, -(SP)             \n\
+        MOV   R5, -(SP)             \n\
+        ADD   R2, R0    // scr+len  \n\
+OUTLNA: MOV   R0, R1      // scr    \n\
+        MOV   R2, R4      // len    \n\
+        CLC                         \n\
+OUTBYA: RORB  -(R1)                 \n\
+        SOB   R4, OUTBYA            \n\
+        INC   PC  // repeat twice   \n\
+        BR    OUTLNA                \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLNA  // hgt    \n\
+        MOV   (SP)+, R5             \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_SL1V
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_SL4V (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        ASL   R2                    \n\
+        DEC   R2        // 2*len-1  \n\
+        MOV   R4, -(SP)             \n\
+OUTLNB: MOV   R0, R1                \n\
+        MOV   R2, R4                \n\
+OUTBTB: MOVB  1(R1), (R1)+          \n\
+        SOB   R4, OUTBTB            \n\
+        CLRB  @R1                   \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLNB            \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_SL4V
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_SL8V (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        DEC   R2          // len-1  \n\
+        MOV   R4, -(SP)             \n\
+OUTLNC: MOV   R0, R1                \n\
+        MOV   R2, R4                \n\
+OUTBTC: MOV   2(R1), (R1)+          \n\
+        SOB   R4, OUTBTC            \n\
+        CLR   @R1                   \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLNC            \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_SL8V
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_SR1V (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        ASL   R2          // 2*len  \n\
+        MOV   R4, -(SP)             \n\
+        MOV   R5, -(SP)             \n\
+OUTLND: MOV   R0, R1      // scr    \n\
+        MOV   R2, R4      // len    \n\
+        CLC                         \n\
+OUTBYD: ROLB  (R1)+                 \n\
+        SOB   R4, OUTBYD            \n\
+        INC   PC  // repeat twice   \n\
+        BR    OUTLND                \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLND  // hgt    \n\
+        MOV   (SP)+, R5             \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_SR1V
+
+/*------------------------------- Cut here --------------------------------*/
 void Laser2_WL1V (int x, int y, int len, int hgt)
 {
   asm("\

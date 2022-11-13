@@ -1,8 +1,281 @@
 MODULE HelloMK90; (*$MAIN*)
-IMPORT MK90;
+IMPORT MK90, Basic, SYSTEM;
+VAR X,Y,R0:INT8;
+T:ARRAY 8 OF INT8;
+
+PROCEDURE SETSQ(X,Y:INT8);
+VAR A,B:INT8;
 BEGIN
-  MK90.CLS;
-  MK90.PSET(10, 10);
-  MK90.LINE(0, 0, 70, 30);
-  LOOP END
+	FOR A:=7 TO 0 BY -1 DO
+	FOR B:=7 TO 0 BY -1 DO
+
+MK90.PSET(A+X*8,B+Y*8);
+
+	END;
+	END;
+END SETSQ;
+
+
+PROCEDURE SAVEREGS;
+BEGIN
+		(*@
+  asm("\
+		MOV R5,-(SP)	\n\
+		MOV R4,-(SP)	\n\
+		MOV R3,-(SP)	\n\
+    MOV R2,-(SP)	\n"
+  );
+*)
+END SAVEREGS;
+
+
+PROCEDURE RESREGS;
+BEGIN
+		(*@
+  asm("\
+		MOV (SP)+,R2	\n\
+		MOV (SP)+,R3	\n\
+		MOV (SP)+,R4	\n\
+		MOV (SP)+,R5	\n"
+  );
+*)
+END RESREGS;
+
+
+
+PROCEDURE PRINT0(CH:CHAR);
+BEGIN
+
+(*@
+  asm("\
+		MOV	 %0, R2 \n\
+		JSR	PC, 0x9d62	\n"
+		::"g"(CH)
+  );
+*)
+
+END PRINT0;
+
+
+
+PROCEDURE PRINT1(CH: CHAR);
+BEGIN
+
+(*@
+  asm("\
+		MOV	 %0, R2 \n\
+		JSR	PC, @$0x8160	\n"
+		::"g"(CH):"r2","r3","r4"
+  );
+*)
+
+END PRINT1;
+
+
+
+PROCEDURE PRSTR(STR: POINTER TO ARRAY [notag] OF CHAR);
+BEGIN
+(*@
+  asm("\
+		MOV	 %0, R0 \n\
+		MOV	 0x5, R3 \n\
+		JSR	PC, #0x8196	\n"
+		::"g"(STR)
+  );
+*)
+END PRSTR;
+
+
+
+
+
+
+(*PROCEDURE CLS;
+BEGIN
+(*@
+asm("\
+MOV $0x3000, R0 \n\
+MOV $0x1E0, R1 \n\
+1$: MOV $0xFFFF, (R0)+ \n\
+SOB R1, 1$ \n"
+:::"r2","r3","r4"
+);
+*)
+END CLS;*)
+
+
+PROCEDURE LOCATE(Y,X:INT8);
+BEGIN
+MK90.POKE(3824H,X);
+MK90.POKE(37D6H,Y);
+END LOCATE;
+
+PROCEDURE SYSCLS;
+BEGIN
+(*@
+  asm("\
+		JSR PC, @$0xa3a0	\n"
+		:::"r2","r3","r4"
+  );
+*)
+END SYSCLS;
+
+
+
+
+
+PROCEDURE FILL; (** Clear screen *)
+BEGIN
+(*@
+asm("\
+MOV $0x3000, R0 \n\
+MOV $0x1E0, R1 \n\
+CLS0: MOV $0xFFFF, (R0)+ \n\
+SOB R1, CLS0 \n"
+);
+*)
+END FILL;
+
+
+
+PROCEDURE PRSTR1(STR:ARRAY OF CHAR)
+VAR K:INT16;
+BEGIN
+K:=0;
+REPEAT
+PRINT1(STR[K]);INC(K);
+UNTIL STR[K]=0X;
+END PRSTR1;
+
+
+PROCEDURE INV0;
+BEGIN
+(*@
+  asm("\
+		JSR PC, 0xa764	\n"
+		:::"r2","r3","r4"
+  );
+*)
+END INV0;
+
+
+PROCEDURE INV1;
+BEGIN
+(*@
+  asm("\
+		JSR PC, 0xa774	\n"
+		:::"r2","r3","r4"
+  );
+*)
+END INV1;
+
+
+
+PROCEDURE KEY (): CHAR;
+BEGIN
+(*@
+	asm("\
+	MOV R2,-(SP)	\n\
+	JSR	PC, 0xb250	\n\
+	MOV	R2,R0	\n\
+	MOV (SP)+,R5	\n\
+	MOV $100, R0	\n"
+	:::"r2","r3","r4"
+	);
+*)
+END KEY;
+
+
+PROCEDURE LEFT;
+VAR X,N:INT8;
+BEGIN
+	N:=T[0];
+	FOR X:=6 TO 0 BY -1 DO
+		T[X]:=T[X+1];
+	END;
+	T[7]:=N;
+END LEFT 
+
+
+PROCEDURE RIGHT;
+VAR X,N:INT8;
+BEGIN
+	N:=T[7];
+	FOR X:=1 TO 7 BY 1 DO
+		T[X]:=T[X-1];
+	END;
+	T[0]:=N;
+END RIGHT
+
+PROCEDURE CHANGE;
+VAR N:INT8;
+BEGIN
+	N:=T[0];T[0]:=T[1];T[1]:=N;
+	N:=T[6];T[6]:=T[7];T[7]:=N;
+END CHANGE;
+
+
+
+PROCEDURE TASOVKA(N:INT8);
+VAR X:INT8;
+BEGIN
+REPEAT
+	IF N MOD 2 = 0 THEN LEFT; ELSE RIGHT; END;
+	IF N MOD 3 = 0 THEN CHANGE; END;
+	DEC (N);
+UNTIL N = 0;
+END TASOVKA;
+
+
+BEGIN
+(*SYSTEM.PUT(0E800H-10000H,200H);
+(*CLS;	(*почему-то после этой команды адрес экрана снова ставится 3000*)*)*)
+
+
+
+(*
+FILL;
+
+
+(*PRSTR("QVERTYUIOPQWERTY");*)
+
+
+
+INV0;
+LOCATE(5,0);
+PRSTR1(031X);
+(*PRSTR1(" pRIWET! |TO oBERON-KOD NA mk-90. sKORO BUDET NAMNOGO LU^[E!"+020X+021X+022X+03FX);*)
+
+
+IF (KEY() = "W") THEN END;
+
+MK90.CLS;
+
+(*PRINT1(CHR(Basic.RND(1,6)));*)
+
+
+LOOP END;
+
+*)
+
+
+
+(*MK90.CLS ПЛОХО РАБОТАЕТ.*)
+
+FILL;
+INV1;
+(*подготовляем экран*)
+LOCATE(40,19);
+PRSTR1(" wandertopiq");
+LOCATE(50,10);
+PRSTR1(" ypritsoft 2022");
+
+TASOVKA(25);
+FILL;
+
+
+LOOP END;
+
+
+
 END HelloMK90.

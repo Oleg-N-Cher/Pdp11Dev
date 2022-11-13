@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("a.out-pdp11")
 ENTRY(start)
-phys = 00001000;
+phys = 00000000;
 SECTIONS
 {
     .text phys : AT(phys)

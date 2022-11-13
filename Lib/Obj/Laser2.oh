@@ -17,7 +17,11 @@ import void Laser2_CLSV (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt)
 import void Laser2_PTBL (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLm (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLy (SHORTINT x, SHORTINT y, SHORTINT spn);
+import void Laser2_SL1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_SL4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_SL8V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 #define Laser2_SPRT(adr)  Laser2_spradr = adr
+import void Laser2_SR1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_WL1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_WL4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_WL8V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);

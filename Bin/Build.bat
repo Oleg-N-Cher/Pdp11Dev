@@ -29,7 +29,7 @@ IF "%Target%"=="MK90" GOTO MK90
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 SET Emul=d:\WIN32APP\Emulz\GID-BK\BK.exe /B
-SET Options=-mbm1 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Options=-mbm1 -msoft-float -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
 SET Include=%Include% -I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
 SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\Basic.lib %PdpDev%\Lib\Laser2.lib %PdpDev%\Lib\Control.lib
 
@@ -55,7 +55,7 @@ EXIT
 
 :: http://ancientbits.blogspot.com/2012/07/programming-barebones-pdp11.html
 
-SET Emul=d:\WIN32APP\Emulz\UKNCbtl\UKNCBTL.exe /autostart /boot
+SET Emul=d:\WIN32APP\Emulz\UKNCbtl\UKNCBTL.exe /autostart /boot /disk0:UKNC.dsk
 SET CodeAdr=01000
 SET Options=-mbm2 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
 SET Include=-I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib

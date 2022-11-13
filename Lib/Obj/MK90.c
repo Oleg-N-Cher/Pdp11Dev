@@ -1,4 +1,4 @@
-/* Ofront+ 1.0 -sx3 -22 */
+/* Ofront+ 1.0 -sxi3 -22 */
 #include "SYSTEM.oh"
 
 
@@ -9,6 +9,10 @@ export void MK90_LINE (SHORTINT x0, SHORTINT y0, SHORTINT x1, SHORTINT y1);
 export void MK90_PIXEL (void);
 export void MK90_PSET (SHORTINT x, SHORTINT y);
 
+#define MK90_PEEK(adr)  (*(char*) (adr))
+#define MK90_PEEKW(adr)  (*(int*) (adr))
+#define MK90_POKE(adr, val)  (*(char*) (adr) = (val))
+#define MK90_POKEW(adr, val)  (*(int*) (adr) = (val))
 
 /*============================================================================*/
 
@@ -17,10 +21,10 @@ void MK90_CLS (void)
 
   asm("\
     MOV  $0x200, @$0xE800 \n\
-    MOV  $0x200, R0  \n\
-    MOV  $0x1E0, R1   \n\
-1$: CLR  (R0)+        \n\
-    SOB  R1, 1$       \n"
+    MOV  $0x200, R0       \n\
+    MOV  $0x1E0, R1       \n\
+1$: CLR  (R0)+            \n\
+    SOB  R1, 1$           \n"
   );
 }
 

@@ -37,10 +37,9 @@ void Basic_AT (int x, int y)
 {
   asm("\
         MOV   %1, R0    // y      \n\
-        MOV   R0, R1              \n\
         ASL   R0                  \n\
         ASL   R0                  \n\
-        ADD   R1, R0              \n\
+        ADD   %1, R0              \n\
         SWAB  R0        // * 640  \n\
         ROR   R0                  \n\
         ADD   $041000, R0         \n\
@@ -232,7 +231,7 @@ OUTWRD: MOV   (R2)+, (R1)+        \n\
 } // Basic_PUT
 
 /*------------------------------- Cut here --------------------------------*/
-int _seed1 = 0173451, _seed2 = 54102;
+int _seed1 = 0173451, _seed2 = 054102;
 
 signed char Basic_RNDN (void)
 {
