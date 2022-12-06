@@ -25,6 +25,8 @@ import void Basic_Init (void);
 import void Basic_PALETTE (SHORTINT n);
 #define Basic_PAPER(color)  Basic_color[0] = color
 #define Basic_PAUSE(ticks)    
+#define Basic_PEEK(adr)  (*(unsigned char*) (adr))
+#define Basic_PEEKW(adr)  (*(unsigned int*) (adr))
 import void Basic_PRCHAR (CHAR ch);
 import void Basic_PRINT (SHORTINT n);
 import void Basic_PRSTR (CHAR *str);
@@ -32,8 +34,8 @@ import void Basic_PRWORD (SHORTINT n);
 import void Basic_PUT (Basic_Adr spradr);
 import void Basic_Quit (void);
 import void Basic_RANDOMIZE (void);
-#define Basic_RND(min, max)  Basic_RNDN()%(max-min+1) + min
-import BYTE Basic_RNDN (void);
+#define Basic_RND(min, max)  (Basic_RNDN()%(max-min+1) + min)
+import CHAR Basic_RNDN (void);
 import BYTE Basic_SGN (BYTE x);
 
 #endif

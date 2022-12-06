@@ -9,7 +9,6 @@
 
 
 import CHAR Control_Get (void);
-#define Control__init()
 
 
 #endif

@@ -1,6 +1,6 @@
 signed char Basic_x, Basic_y;
 signed char Basic_color [2];
-void *Basic_scradr, *Basic_seed, *Basic_fontadr;
+void *Basic_scradr, *Basic_fontadr;
 signed char Basic_bk10;
 
 /*------------------------------- Cut here --------------------------------*/
@@ -19,8 +19,7 @@ BK_10$: TST   (SP)+ // Ignore ret adr \n\
         MOVB  $1, _Basic_bk10         \n\
 0$:     MOV   (SP)+, @$4 // Restore 4 \n\
         MOVB  $0100, @$0177660        \n\
-        MOV   $041000, _Basic_scradr  \n\
-        MOV   $0100000, _Basic_seed   \n"
+        MOV   $041000, _Basic_scradr  \n"
   );
 } // Basic_Init
 
@@ -63,13 +62,17 @@ void Basic_CLS (void)  // Clear screen
 
 /*------------------------------- Cut here --------------------------------*/
 signed char Basic_INKEY (void) {
+  register int result asm ("r0");
   asm("\
         CLR   R0                 \n\
         TSTB  @$0177660          \n\
         BPL   NOKEY$             \n\
         MOVB  @$0177662, R0      \n\
  NOKEY$:                         \n"
+      :"=r"(result)
+      ::"cc","memory"
   );
+  return result;
 } // Basic_INKEY
 
 /*------------------------------- Cut here --------------------------------*/
@@ -233,10 +236,11 @@ OUTWRD: MOV   (R2)+, (R1)+        \n\
 /*------------------------------- Cut here --------------------------------*/
 int _seed1 = 0173451, _seed2 = 054102;
 
-signed char Basic_RNDN (void)
+unsigned char Basic_RNDN (void)
 {
   // Random generator for BK-0010 (c) Manwe/SandS 2019
   // https://zx-pk.ru/threads/11381-napisanie-programm-dlya-bk0010.html?p=1002531#post1002531
+  register unsigned char r0 asm ("r0");
   asm("\
         MOV   __seed1, R0  \n\
         MOV   __seed2, R1  \n\
@@ -248,7 +252,10 @@ signed char Basic_RNDN (void)
         MOV   R1, __seed2  \n\
 .globl  _Basic_RANDOMIZE   \n\
 _Basic_RANDOMIZE:          \n"
+      :"=r"(r0)
+      ::"r1","cc","memory"
   );
+  return r0;
 } // Basic_RNDN
 
 /*------------------------------- Cut here --------------------------------*/

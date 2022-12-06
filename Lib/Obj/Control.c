@@ -13,7 +13,7 @@ CHAR Control_Get (void)
 {
 
   asm("\
-    BIT  $100, @$0177716         \n\
+    BIT  $0100, @$0177716        \n\
     BNE  2$                      \n\
     MOV  $CodesK-CodesJ, R0      \n\
 1$: CMPB CodesK-1(R0), @$0177662 \n\

@@ -102,3 +102,6 @@ int __modhi3 (int a, int b)
       :"r2", "r3"
   );
 } // __modhi3
+
+/*------------------------------- Cut here --------------------------------*/
+int __umodhi3 (int a, int b) { return __modhi3(a, b); }
