@@ -13,6 +13,8 @@ PROCEDURE- PTBLy * (x, y, spn: INTEGER);
 (** Screen windows processing (coordinates CANNOT be outside the screen): *)
 
 PROCEDURE- CLSV * (col, row, len, hgt: INTEGER);
+PROCEDURE- SETV * (col, row, len, hgt: INTEGER; pattern: SYSTEM.BYTE);
+PROCEDURE- MIRV * (col, row, len, hgt: INTEGER);
 PROCEDURE- SL1V * (col, row, len, hgt: INTEGER);
 PROCEDURE- SL4V * (col, row, len, hgt: INTEGER);
 PROCEDURE- SL8V * (col, row, len, hgt: INTEGER);

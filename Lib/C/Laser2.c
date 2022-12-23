@@ -131,8 +131,8 @@ void _Laser2_XYtoScr (int dummy, int r2, int r3,
         ADD   $041000, R0       \n\
         ADD   %3, R0            \n\
         ADD   %3, R0  // + 2*x  \n\
-        MOVB  %5, R2  // len    \n\
-        MOVB  %6, R3  // hgt    \n"
+        MOV   %5, R2  // len    \n\
+        MOV   %6, R3  // hgt    \n"
       ::"g"(dummy), "g"(r2), "g"(r3),
         "g"(x), "g"(y), "g"(len), "g"(hgt)
   );
@@ -154,6 +154,71 @@ OUTWR2: CLR   (R1)+                 \n\
       :::"r2", "r3"
   );
 } // Laser2_CLSV
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_SETV (int x, int y, int len, int hgt, unsigned char pattern)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        MOV   R4, -(SP)             \n\
+OUTLNF: MOV   R0, R1                \n\
+        MOV   R2, R4                \n\
+OUTWRF: MOVB  16(SP), (R1)+         \n\
+        SOB   R4, OUTWRF            \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLNF            \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_SETV
+
+/*------------------------------- Cut here --------------------------------*/
+void _MIRROR_BYTE (void)
+{ // (c) Serg @ t.me/bk0010_11m
+  asm("\
+// Input: R1 byte; Output: R3 byte  \n\
+        JSR   PC, (PC)              \n\
+        JSR   PC, (PC)              \n\
+        ROLB  R1                    \n\
+        ROLB  R1                    \n\
+        RORB  R3                    \n\
+        RORB  R1                    \n\
+        RORB  R3                    \n\
+        ROLB  R1                    \n"
+  );
+} // _MIRROR_BYTE
+
+void Laser2_MIRV (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        MOV   R4, -(SP)             \n\
+        MOV   R5, -(SP)             \n\
+OUTLNG: MOV   R0, R5   // R0 left   \n\
+        ADD   R2, R5   // R5 right  \n\
+        MOV   R2, R4   // len       \n\
+        INC   R4       // len + 1   \n\
+        ASR   R4       // (len+1)/2 \n\
+        MOV   R0, -(SP)  // scr adr \n\
+        MOV   R3, -(SP)             \n\
+OUTWRG: DEC   R5                    \n\
+        MOVB  @R5, R1               \n\
+        JSR   PC, __MIRROR_BYTE     \n\
+        MOVB  @R0, R1               \n\
+        MOVB  R3, @R0               \n\
+        JSR   PC, __MIRROR_BYTE     \n\
+        MOVB  R3, @R5               \n\
+        INC   R0                    \n\
+        SOB   R4, OUTWRG            \n\
+        MOV   (SP)+, R3             \n\
+        MOV   (SP)+, R0             \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLNG            \n\
+        MOV   (SP)+, R5             \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_MIRV
 
 /*------------------------------- Cut here --------------------------------*/
 void Laser2_SL1V (int x, int y, int len, int hgt)

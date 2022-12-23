@@ -60,7 +60,7 @@ extern long SYSTEM_XCHK();
 extern long SYSTEM_RCHK();
 extern float SYSTEM_ABSD (REAL i);
 extern SHORTINT SYSTEM_STRCMP (CHAR *x, CHAR *y);
-inline SHORTINT SYSTEM__STRLEN (CHAR *str) {
+inline SHORTINT SYSTEM_STRLEN (CHAR *str) {
   register int result asm ("r0");
   asm("\n\
         MOV  %1, R0  \n\
