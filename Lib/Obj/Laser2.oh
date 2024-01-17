@@ -29,5 +29,6 @@ import void Laser2_WL4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt)
 import void Laser2_WL8V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_WR1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_WR4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
+import void Laser2_WR8V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 
 #endif

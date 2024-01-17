@@ -169,44 +169,55 @@ NULLCH:"
 } // Basic_PRSTR
 
 /*------------------------------- Cut here --------------------------------*/
+unsigned int TEN [] = {10000,1000,100,10, 0};
+
 void Basic_PRWORD (int n)
 {
   asm("\
-        MOV   %0, R2                \n\
-        MOV   $TEN, R3 // table adr \n\
-1$:     CMP   (R3)+, R2 // skip 0's \n\
-        BHI   1$                    \n\
-        MOV   -(R3), R0             \n\
-        BEQ   4$ // if less than 10 \n\
-2$:     MOV   $47, R1   // '0' - 1  \n\
-3$:     INC   R1   // count digits  \n\
-        SUB   R0, R2                \n\
-        BHIS  3$  // higher or same \n\
-        MOVB  R1, -(SP)             \n\
-        JSR   PC, _Basic_PRCHAR     \n\
-        ADD   $2, SP                \n\
-        ADD   (R3)+, R2             \n\
-        MOV   (R3), R0              \n\
-        BNE   2$                    \n\
-4$:     ADD   $48, R2  // ASCII '0' \n\
-        MOVB  R2, -(SP)             \n\
-        JSR   PC, _Basic_PRCHAR     \n\
-        ADD   $2, SP                \n\
-        BR    5$                    \n\
-TEN:    .WORD 10000,1000,100,10, 0  \n\
-5$:                                 \n"
+        MOV   %0, R2                 \n\
+        MOV   $_TEN, R3 // table adr \n\
+1$:     CMP   (R3)+, R2 // skip 0's  \n\
+        BHI   1$                     \n\
+        MOV   -(R3), R0              \n\
+        BEQ   4$ // if less than 10  \n\
+2$:     MOV   $47, R1   // '0' - 1   \n\
+3$:     INC   R1   // count digits   \n\
+        SUB   R0, R2                 \n\
+        BHIS  3$  // higher or same  \n\
+        MOVB  R1, -(SP)              \n\
+        JSR   PC, _Basic_PRCHAR      \n\
+        ADD   $2, SP                 \n\
+        ADD   (R3)+, R2              \n\
+        MOV   (R3), R0               \n\
+        BNE   2$                     \n\
+4$:     ADD   $48, R2  // ASCII '0'  \n\
+        MOVB  R2, -(SP)              \n\
+        JSR   PC, _Basic_PRCHAR      \n\
+        ADD   $2, SP                 \n"
       ::"g"(n):"r2","r3"
   );
 } // Basic_PRWORD
 
 /*------------------------------- Cut here --------------------------------*/
+unsigned int DOTMASK [] = {3, 12, 48, 192, 768, 3072, 12288, 49152};
+
 void Basic_PSET (int x, int y)
 {
   asm("\
-        MOVB _Basic_color, R0   \n\
-        MOV  %0, R1             \n\
-        MOV  %1, R2             \n\
-        EMT  030                \n"
+        MOV  %0, R1            \n\
+        MOV  %1, R2            \n\
+        MOV  R1, R0            \n\
+        BIC  $0177770, R0      \n\
+        ASL  R0                \n\
+        MOV  _DOTMASK(R0), R0  \n\
+        SWAB R2                \n\
+        CLRB R2                \n\
+        BISB R1, R2            \n\
+        ROR  R2                \n\
+        ASR  R2                \n\
+        BIS  R0, 40000(R2)     \n\
+        BICB _Basic_color, R0  \n\
+        BIC  R0, 40000(R2)     \n"
       ::"g"(x),"g"(y):"r2"
   );
 } // Basic_PSET

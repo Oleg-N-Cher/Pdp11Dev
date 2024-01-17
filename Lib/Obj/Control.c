@@ -25,7 +25,7 @@ CHAR Control_Get (void)
     SOB  R0, 3$                  \n\
 4$: RTS  PC                      \n\
 CodesJ: .BYTE 010, 02, 01, 04,040,0100 \n\
-CodesK: .BYTE 010,031,032,033,040, 015 \n"
+CodesK: .BYTE 010,031,032,033,040, 012 \n"
   );
   __RETCHK((CHAR*)"Control", 0);
 }

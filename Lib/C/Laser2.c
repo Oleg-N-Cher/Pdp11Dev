@@ -424,3 +424,27 @@ OUTBT7: MOVB  -(R1), 1(R1)          \n\
       :::"r2", "r3"
   );
 } // Laser2_WR4V
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_WR8V (int x, int y, int len, int hgt)
+{
+  asm("\
+        JSR   PC, __Laser2_XYtoScr  \n\
+        DEC   R2          // len-1  \n\
+        MOV   R4, -(SP)             \n\
+        MOV   R5, -(SP)             \n\
+        ADD   R2, R0                \n\
+        ADD   R2, R0  // scr+2*len  \n\
+OUTLN8: MOV   R0, R1                \n\
+        MOV   R2, R4                \n\
+        MOV   @R1, R5               \n\
+OUTWR8: MOV   -(R1), 2(R1)          \n\
+        SOB   R4, OUTWR8            \n\
+        MOV   R5, @R1               \n\
+        ADD   $0100, R0             \n\
+        SOB   R3, OUTLN8            \n\
+        MOV   (SP)+, R5             \n\
+        MOV   (SP)+, R4             \n"
+      :::"r2", "r3"
+  );
+} // Laser2_WR8V

@@ -24,5 +24,6 @@ PROCEDURE- WL4V * (col, row, len, hgt: INTEGER);
 PROCEDURE- WL8V * (col, row, len, hgt: INTEGER);
 PROCEDURE- WR1V * (col, row, len, hgt: INTEGER);
 PROCEDURE- WR4V * (col, row, len, hgt: INTEGER);
+PROCEDURE- WR8V * (col, row, len, hgt: INTEGER);
 
 END Laser2.
