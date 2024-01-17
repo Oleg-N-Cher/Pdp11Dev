@@ -18,6 +18,8 @@ import void Laser2_MIRV (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt)
 import void Laser2_PTBL (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLm (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_PTBLy (SHORTINT x, SHORTINT y, SHORTINT spn);
+import void Laser2_PTND (SHORTINT x, SHORTINT y, SHORTINT spn);
+import void Laser2_PTOR (SHORTINT x, SHORTINT y, SHORTINT spn);
 import void Laser2_SETV (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt, CHAR pattern);
 import void Laser2_SL1V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);
 import void Laser2_SL4V (SHORTINT col, SHORTINT row, SHORTINT len, SHORTINT hgt);

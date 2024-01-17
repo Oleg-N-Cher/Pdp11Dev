@@ -1,9 +1,32 @@
 void *Laser2_spradr;
 
+void Laser2_PTND (int x, int y, int spn)
+{
+  asm("\
+        MOVB  $0304, R1  // BICB  \n\
+        JMP   PTBLMODE            \n"
+      ::"g"(x), "g"(y), "g"(spn)
+  );
+} // PTND
+
+/*------------------------------- Cut here --------------------------------*/
+void Laser2_PTOR (int x, int y, int spn)
+{
+  asm("\
+        MOVB  $0324, R1  // BISB  \n\
+        JMP   PTBLMODE            \n"
+      ::"g"(x), "g"(y), "g"(spn)
+  );
+} // PTOR
+
+/*------------------------------- Cut here --------------------------------*/
 void Laser2_PTBL (int x, int y, int spn)
 { /* R0 - screen address
      R2 - sprite address */
   asm("\
+        MOVB  $0224, R1  // MOVB  \n\
+.globl PTBLMODE                   \n\
+PTBLMODE:                         \n\
         MOV   %1, R0     // y     \n\
         ASL   R0                  \n\
         ASL   R0                  \n\
@@ -11,10 +34,15 @@ void Laser2_PTBL (int x, int y, int spn)
         SWAB  R0        // * 640  \n\
         ROR   R0                  \n\
 .globl PTBL_E                     \n\
-PTBL_E: ADD   $041000, R0         \n\
+PTBL_E: MOVB  R1, OUTWRD+1        \n\
+        MOVB  R1, OUTWRD2+1       \n\
+        ADD   $041000, R0         \n\
         ADD   %0, R0              \n\
         ADD   %0, R0    // + 2*x  \n\
         MOVB  %2, R1    // spn    \n\
+        MOV   R2, -(SP)           \n\
+        MOV   R3, -(SP)           \n\
+        MOV   R4, -(SP)           \n\
         MOV   _Laser2_spradr, R2  \n\
 FIND_S: CMPB  (R2)+, R1           \n\
         BEQ   SPRFND              \n\
@@ -29,13 +57,15 @@ SPRFND: TSTB  (R2)+               \n\
 OUTLIN: MOV   R0, R1              \n\
         MOV   R3, R5              \n\
 OUTWRD: MOVB  (R2)+, (R1)+        \n\
-        MOVB  (R2)+, (R1)+        \n\
+OUTWRD2:MOVB  (R2)+, (R1)+        \n\
         SOB   R5, OUTWRD          \n\
         ADD   $0100, R0           \n\
         SOB   R4, OUTLIN          \n\
-        MOV   (SP)+, R5           \n"
+        MOV   (SP)+, R5           \n\
+        MOV   (SP)+, R4           \n\
+        MOV   (SP)+, R3           \n\
+        MOV   (SP)+, R2           \n"
       ::"g"(x), "g"(y), "g"(spn)
-      :"r2", "r3", "r4"
   );
 } // PTBL
 
@@ -43,13 +73,13 @@ OUTWRD: MOVB  (R2)+, (R1)+        \n\
 void Laser2_PTBLy (int x, int y, int spn)
 {
   asm("\
+        MOVB  $0224, R1  // MOVB  \n\
         MOV   %1, R0     // y     \n\
         SWAB  R0                  \n\
         ROR   R0         // * 64  \n\
         ASR   R0                  \n\
         JMP   PTBL_E              \n"
       ::"g"(x), "g"(y), "g"(spn)
-      :"r2", "r3", "r4"
   );
 } // PTBLy
 

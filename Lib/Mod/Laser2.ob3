@@ -7,6 +7,8 @@ VAR
 
 PROCEDURE- SPRT  * (adr: SprAdr) "Laser2_spradr = adr";
 PROCEDURE- PTBL  * (x, y, spn: INTEGER);
+PROCEDURE- PTND  * (x, y, spn: INTEGER);
+PROCEDURE- PTOR  * (x, y, spn: INTEGER);
 PROCEDURE- PTBLm * (x, y, spn: INTEGER);
 PROCEDURE- PTBLy * (x, y, spn: INTEGER);
 
