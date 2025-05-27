@@ -18,7 +18,7 @@ import SHORTINT Basic_scradr;
 import void Basic_AT (SHORTINT x, SHORTINT y);
 import void Basic_CLS (void);
 #define Basic_COLOR(color)  Basic_color[1] = (char)color; Basic_color[0] = color >> 8
-#define Basic_FONT(adr)  Basic_fontadr = adr - (32-11)*10
+#define Basic_FONT(adr)  Basic_fontadr = adr - (33-10)*10
 #define Basic_INK(color)  Basic_color[1] = color
 import CHAR Basic_INKEY (void);
 import void Basic_Init (void);

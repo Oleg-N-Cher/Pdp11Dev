@@ -15,7 +15,7 @@ PROCEDURE- AT* (x, y: INT16);
 PROCEDURE- CLS*;
 PROCEDURE- COLOR* (color: INT16)
   "Basic_color[1] = (char)color; Basic_color[0] = color >> 8";
-PROCEDURE- FONT* (adr: Adr) "Basic_fontadr = adr - (32-11)*10";
+PROCEDURE- FONT* (adr: Adr) "Basic_fontadr = adr - (33-10)*10";
 PROCEDURE- INK* (color: INT8) "Basic_color[1] = color";
 PROCEDURE- INKEY* (): CHAR;
 PROCEDURE- PALETTE* (n: INTEGER);

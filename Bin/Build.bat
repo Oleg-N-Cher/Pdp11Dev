@@ -57,7 +57,7 @@ EXIT
 
 SET Emul=d:\WIN32APP\Emulz\UKNCbtl\UKNCBTL.exe /autostart /boot /disk0:UKNC.dsk
 SET CodeAdr=01000
-SET Options=-mbm2 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Options=-mbm2 -msoft-float -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
 SET Include=-I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
 SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\CGLIB.lib %PdpDev%\Lib\Graph.lib
 
@@ -87,7 +87,7 @@ EXIT
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 SET EmulPath=d:\WIN32APP\Emulz\MK90\
-SET Options=-mbm2 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Options=-mbm2 -msoft-float -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
 SET Include=%Include% -I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
 SET Libraries=%Libraries% -L %PdpDev%\Lib %PdpDev%\Lib\XDev.lib %PdpDev%\Lib\MK90.lib
 

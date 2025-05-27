@@ -234,7 +234,8 @@ void Basic_PUT (void *spradr)
         MOV   R5, -(SP)           \n\
 OUTROW: MOV   R0, R1              \n\
         MOV   R3, R5              \n\
-OUTWRD: MOV   (R2)+, (R1)+        \n\
+OUTWRD: MOVB  (R2)+, (R1)+        \n\
+        MOVB  (R2)+, (R1)+        \n\
         SOB   R5, OUTWRD          \n\
         ADD   $0100, R0           \n\
         SOB   R4, OUTROW          \n\

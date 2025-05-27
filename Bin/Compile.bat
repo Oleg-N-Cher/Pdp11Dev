@@ -8,7 +8,7 @@ SET AS=pdp11-aout-as.exe
 IF "%Clean%"=="" SET Clean=TRUE
 
 SET Include=%Include% -I %PdpDev%\Lib\C -I %PdpDev%\Lib\Obj -I %PdpDev%\Lib
-SET Options=%Options% -mbm1 -msoft-float -O2 -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
+SET Options=%Options% -mbm1 -msoft-float -Os -quiet -fomit-frame-pointer -fverbose-asm -Wno-write-strings
 
 %CC% -C %1.c %Options% %Include%
 IF errorlevel 1 PAUSE
